@@ -1,0 +1,129 @@
+body {
+  margin: 0;
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  text-align: center;
+  color: #fff !important;
+  background-color: #2185d0;
+  z-index: 3;
+  width: 100%;
+  word-spacing: 15px;
+  -webkit-box-shadow: 3px 6px 12px 1px rgba(201,201,201,1);
+  -moz-box-shadow: 3px 6px 12px 1px rgba(201,201,201,1);
+  box-shadow: 3px 6px 12px 1px rgba(201,201,201,1);
+}
+
+.headerText {
+  font-family: 'Oswald', sans-serif !important;
+  padding: 15px 15px 11px 15px !important;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 10px;
+  position: relative;
+  top: 68px;
+  max-width: 900px;
+  height: 600px;
+}
+
+.search {
+  margin: 15px 0 20px 0;
+  padding: 10px 0 10px 0;
+  width: 100%;
+  text-align: center;
+  /* background-color: #edf7ff; */
+  border-radius: 5px;
+  border: 1px solid #dededf;
+}
+
+.instructions {
+  position: relative;
+  top: 15px;
+}
+
+
+.resultContent {
+  line-height: 1.5rem;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.contextButton {
+  cursor: pointer;
+  text-align: center;
+}
+.contextButton:hover {
+  color: #2185d0;
+}
+
+.pluralities {
+  position: relative;
+  top: -5px;
+  left: 10px;
+  
+}
+
+.buttonRow {
+  padding: 3px 0 8px 0 !important;
+  font-size: 0.9rem;
+  /* margin: 0 !important; */
+}
+
+.buttonRow > * > svg{
+  position: relative;
+  top: 2px;
+  right: 6px;
+}
+
+.highlightSearchTerm {
+  /* color: rgba(33, 133, 208, 1); */
+  border-radius: 2px;
+  background-color: #feff9d;
+  /* font-weight: bold; */
+  padding: 0 3px 1px 3px;
+  border: 1px solid rgb(201,201,201);
+  
+}
+
+.navigationButtons {
+  /* background-color: red; */
+}
+
+.sortDropdown {
+  float: right;
+  position: relative;
+  top: 2px;
+}
+
+.result {
+  color: #000;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 5px;
+}
+
+.articleWrapper {
+  border: 1px solid #dededf;
+  background-color: #2185d0;
+  color: #FFF;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 0 0 12px 0;
+}
+.articleHead {
+  margin: 4px 0 4px 0 !important;
+}
