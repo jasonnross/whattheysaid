@@ -5,9 +5,9 @@ export class Footer extends Component {
     return (
       <div className="ui grid">
         <div className="three column row">
-          <div className="column contextButton"><a href="https://google.com">What is this?</a></div>
-          <div className="column contextButton"><a href="https://google.com">Something's missing</a></div>
-          <div className="column contextButton"><a href="https://google.com">Support us</a></div>
+        <div className="column">What is this?</div>
+          <div className="column">Something's missing</div>
+          <div className="column">Support us</div>
         </div>
       </div>
     )

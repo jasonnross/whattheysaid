@@ -1,32 +1,26 @@
 import React, { Component } from 'react'
-import { FaMinus, FaPlus, FaShareAlt } from 'react-icons/fa'
-import { Divider } from 'semantic-ui-react'
-import _ from 'lodash'
+import { suffixes } from '../helpers/forms'
+import Quote from './Quote'
 const { DateTime } = require("luxon")
 
 export class Article extends Component {
-  state = {
-    contextLevel: 1
-  }
-
   renderArticle = () => {
-    const { searchValue, content } = this.props;
-    const { contextLevel } = this.state;
-    const regex = new RegExp(`(\\b${searchValue}\\b)`, 'i');
-    var separatedSentenceElements = content.split(/([?.!])/g);
+    const { searchValue, showAllForms, content } = this.props;
+    const suffixInserts = suffixes.join('|');
+    let regExpString;
+    if (showAllForms) {
+      regExpString = String.raw`\b${searchValue}(?:${suffixInserts})?\b`
+    } else {
+      regExpString = String.raw`\b${searchValue}\b`
+    }
 
-    // initially separate sentences by punctuation
-    separatedSentenceElements.forEach((element, i) => {
-      if (['.','!','?'].includes(element)) {
-        separatedSentenceElements[i-1] = separatedSentenceElements[i-1].concat(element);
-        separatedSentenceElements.splice(i, 1);
-      }
-    });
-    var indexesOfMatchingSentences = [];
+    const regExp = new RegExp(regExpString, "i");
+    var separatedSentenceElements = content.split(/(?<=[.!?])/);
 
     // create array of indexes of sentences matching the search term
+    var indexesOfMatchingSentences = [];
     separatedSentenceElements.forEach((sentence, i) => {
-      if (regex.test(sentence)) {
+      if (regExp.test(sentence)) {
         indexesOfMatchingSentences.push(i)
       }
     })
@@ -34,7 +28,7 @@ export class Article extends Component {
     // separate the relevant indexes into smaller captureGroups
     var captureGroups = [];
     indexesOfMatchingSentences.forEach(sentenceIndex => {
-      if (captureGroups.length === 0) { // first loop thru
+      if (captureGroups.length === 0) { // first loop through
         captureGroups.push([sentenceIndex])
       } else { // following loops
         var currentCaptureGroup = captureGroups[captureGroups.length-1];
@@ -49,48 +43,20 @@ export class Article extends Component {
 
     // for each capture group, render something
     return captureGroups.map(captureGroup => {
-      const indexOfEarliestMention = captureGroup[0];
-      const indexOfLatestMention = captureGroup[captureGroup.length - 1];
-      const maximumIndexOfSentence = separatedSentenceElements.length;
-      const targetBeginningIndex = (indexOfEarliestMention - contextLevel) < 0 ? 0 : indexOfEarliestMention - contextLevel;
-      const targetEndIndex = (indexOfLatestMention + 1 + contextLevel) > maximumIndexOfSentence ? maximumIndexOfSentence : indexOfLatestMention + 1 + contextLevel;
-      const arrayToUse = separatedSentenceElements.slice(targetBeginningIndex, targetEndIndex);
-      arrayToUse[0] = arrayToUse[0].trim()
-
-      const returnContent = arrayToUse.map((sentence, i) => {
-        if (_.indexOf(['.','!','?'], sentence) !== -1) {
-          return sentence
-        } else {
-          const sentenceSplitByTerm = sentence.split(regex);
-          return sentenceSplitByTerm.map(section => {
-            if (section === searchValue) {
-              return <span key={ searchValue } className="highlightSearchTerm">{ searchValue }</span>
-            } else {
-              return (i === 0 ? section : section)
-            }
-          })
-        }
-      })
-
       return (
-        <div key={ this.props.key } className="result">
-          <div className="resultContent">
-            "{ returnContent }"
-          </div>
-          <Divider />
-          <div className="ui grid">
-            <div className="three column row buttonRow">
-              <div className="column contextButton"><FaMinus />Less Context</div>
-              <div className="column contextButton"><FaPlus />More Context</div>
-              <div className="column contextButton"><FaShareAlt />Share</div>
-            </div>
-          </div>
-        </div>
+        <Quote
+          key = { this.props.key }
+          searchValue = { searchValue }
+          captureGroup = { captureGroup }
+          separatedSentenceElements = { separatedSentenceElements }
+          showAllForms = { showAllForms }
+        />
       )
-    })  
+    })
   }
+
   render() {
-    const methods = { 
+    const methods = {
       speech: {
         phrase: 'during a speech',
       },
@@ -110,7 +76,6 @@ export class Article extends Component {
       <div className="articleWrapper">
         <div className="articleHead"><b>{ formattedDate }</b>&nbsp;{ methods[method].phrase }</div>
         { this.renderArticle() }
-        
       </div>
     )
   }

@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Head from './components/Head';
 import Home from './pages/Home';
+import About from './pages/About';
 
 function App() {
   return (
@@ -15,11 +16,14 @@ function App() {
       <div className="container">
       <Router>
         <Switch>
-          <Route path="/">
+          <Route exact path="/">
             <Home />
           </Route>
+          <Route exact path="/about">
+            <About />
+          </Route>
         </Switch>
-      </Router>  
+      </Router>
       </div>
     </Fragment>
   );

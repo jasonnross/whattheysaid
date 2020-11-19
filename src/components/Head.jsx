@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 
 export class Head extends Component {
   render() {
     return (
       <div className="header">
-        <Header as="h2" className="headerText">WHAT THEY SAID</Header>
-        <small>No bias, nothing added, EVER. Just what they said.</small>
+        <Router forceRefresh={true}>
+          <Link to="/"><Header as="h2" className="headerText">WHAT THEY SAID</Header></Link>
+        </Router>
       </div>
     )
   }

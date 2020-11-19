@@ -14,11 +14,13 @@ export class Home extends Component {
       searchValue: null,
       selectedPerson: null,
       person: {},
+      showAllForms: true,
     },
     last: {
       searchValue: null,
       selectedPerson: null,
       person: {},
+      showAllForms: true,
     },
     persons: [],
     articles: [],
@@ -39,16 +41,16 @@ export class Home extends Component {
       }
     }
   }
+
   search = async () => {
-    this.setState({ loadingResult: true, })
-    const { searchValue, selectedPerson } = this.state.current;
+    this.setState({ loadingResult: true })
+    const { searchValue, selectedPerson, showAllForms } = this.state.current;
     const { persons } = this.state;
     const i = _.findIndex(persons, function(o) { return o._id === selectedPerson; });
     const person = persons[i];
     if ( !searchValue || !selectedPerson ) { return false }
-    const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue } });
-    console.log(articles)
-    this.setState({ last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person }, articles: articles, loadingResult: false });
+    const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false') } });
+    this.setState({ last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person, showAllForms: showAllForms }, articles: articles, loadingResult: false });
   }
   renderPersonsOptions = () => {
     const { persons } = this.state;
@@ -61,14 +63,14 @@ export class Home extends Component {
     }
   }
   renderQuotes = () => {
-    const { selectedPerson, searchValue } = this.state.last;
+    const { selectedPerson, searchValue, showAllForms } = this.state.last;
     const { articles, persons } = this.state;
     if (!( selectedPerson && persons )) { return false; }
     const i = _.findIndex(persons, function(o) { return o._id === selectedPerson; });
     const person = persons[i];
-    return articles.map(article => {
+    return articles.map((article, i) => {
       return (
-        <Fragment key={ article._id }><Article name={ `${person.first_name} ${person.last_name}`} date={ article.date } method={ article.type } searchValue={ searchValue } content={ article.content } /></Fragment>
+        <Fragment key={ article._id+i }><Article name={ `${person.first_name} ${person.last_name}`} date={ article.date } method={ article.type } searchValue={ searchValue } showAllForms={ showAllForms } content={ article.content } /></Fragment>
       )
     })
   }
@@ -94,19 +96,25 @@ export class Home extends Component {
     } else {
       if (last.searchValue) {
         if (articles.length > 0) {
-          return <span>We searched 11 speeches, 23 interviews, 389 tweets and found <b>{ `${last.person.first_name} ${last.person.last_name}` }</b> said:</span>
+          return <span>We found <b>{ `${last.person.first_name} ${last.person.last_name}` }</b> said:</span>
         } else {
-          return <span>We searched 11 speeches, 23 interviews, 389 tweets and found NO EVIDENCE of <b>{ `${last.person.first_name} ${last.person.last_name}` }</b> ever using the phrase "{ last.searchValue }".</span>
+          return <span>We found NO EVIDENCE of <b>{ `${last.person.first_name} ${last.person.last_name}` }</b> ever using the phrase "{ last.searchValue }".</span>
         }
       } else {
         return <Footer />
       }
     }
   }
+  toggleShowAllForms = () => {
+    const { current } = this.state;
+    current.showAllForms = !!!current.showAllForms;
+    this.setState({ current: current })
+    this.search()
+  }
   render() {
     const { loading } = this.state;
     const { current, last } = this.state;
-    
+
     if (loading) {
       return <div className="resultLoaderDiv"><Loader /></div>
     } else {
@@ -117,24 +125,30 @@ export class Home extends Component {
             &nbsp;&nbsp;
             <Dropdown
               inline
-              placeholder='this person' 
-              onChange={this.onPersonChange} 
-              options={ this.renderPersonsOptions()} 
+              placeholder='this person'
+              onChange={this.onPersonChange}
+              options={ this.renderPersonsOptions()}
             />
             &nbsp;&nbsp;
             say about
             &nbsp;&nbsp;
-            <Input transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }/>
-            
-            { (!current.selectedPerson || !current.searchValue || ( current.searchValue === last.searchValue && current.selectedPerson === last.selectedPerson )) ? <Button primary disabled>?</Button> : <Button onClick={ this.search } primary>?</Button> }
+            <Input className="topicInput" transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }/>
+
+            { (!current.selectedPerson || !current.searchValue || ( current.searchValue === last.searchValue && current.selectedPerson === last.selectedPerson && current.showAllForms === last.showAllForms )) ? <Button primary disabled>?</Button> : <Button onClick={ this.search } primary>?</Button> }
           </div>
           <div className="navigationButtons">
-          <Radio toggle defaultChecked/><span className="pluralities">Explore all pluralities and forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
-          <Dropdown 
+          <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ current.showAllForms }/><span className="pluralities">Explore all pluralities and forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
+          <Dropdown
             className="sortDropdown"
             inline
-            placeholder="Most recent"
-          />
+            placeholder="Newest first"
+          >
+            <Dropdown.Menu>
+              <Dropdown.Item text='Newest first' />
+              <Dropdown.Item text='Most relevant' />
+            </Dropdown.Menu>
+
+          </Dropdown>
           </div>
           <Divider />
             { this.renderResultDescription() }
