@@ -26,7 +26,7 @@ export class Quote extends Component {
     const arrayToUse = separatedSentenceElements.slice(targetBeginningIndex, targetEndIndex);
     arrayToUse[0] = arrayToUse[0].trim()
 
-    const possibleForms = supplyAllForms(searchValue)
+    const possibleForms = supplyAllForms(searchValue);
     const regExpSplitString = showAllForms ? new RegExp('\\b('+possibleForms.join('|')+')\\b', "i") : new RegExp('\\b('+searchValue+')\\b', "i")
 
     const returnContent = arrayToUse.map((sentence, i) => {
@@ -43,7 +43,7 @@ export class Quote extends Component {
     const allowContextDecrease = !!(contextLevel > 1);
 
     return (
-      <div key={ this.props.key } className="result">
+      <div className="result">
         <div className="resultContent">
           "{ returnContent }"
         </div>
@@ -52,7 +52,7 @@ export class Quote extends Component {
           <div className="three column row buttonRow">
             {allowContextDecrease && <div className="column contextButton" onClick={ () => this.alterContextLevel(-1) }><FaMinus />Less context</div>}
             {!allowContextDecrease && <div className="column contextButtonDisabled"><FaMinus />Less context</div>}
-            <div className="column contextCounter"><span>{ contextLevel === 1 ? '0' : `+${contextLevel-1}` }</span></div>
+            <div className="column contextCounter"><span>{ contextLevel === 1 ? '0' : `+ ${contextLevel-1}` }</span></div>
             {allowContextIncrease && <div className="column contextButton" onClick={ () => this.alterContextLevel(+1) }><FaPlus />More context</div>}
             {!allowContextIncrease && <div className="column contextButtonDisabled"><FaPlus />More context</div>}
           </div>

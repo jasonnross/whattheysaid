@@ -1,0 +1,325 @@
+html {
+  font-size: 15px !important;
+}
+
+:root {
+  --primary-blue: #2185d0;
+  --primary-grey: #15191d;
+  --secondary-grey: #22282e;
+  --standard-text: #e4e5eb;
+  --disabled-text: #636363;
+  --muted-text: #636363;
+  --muted-background: #2e2e2e;
+  --body-background: #0b0d0f;
+  --yellow-accent: #feff9d;
+  --box-shadow: 2px 2px 15px 1px var(--body-background);
+}
+
+body {
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--body-background) !important;
+  color: var(--standard-text) !important;
+}
+
+h4 {
+  font-size: 1.3rem !important;
+}
+
+::selection {
+  color: var(--standard-text) !important;
+  background: var(--primary-blue) !important;
+}
+
+::-moz-selection { /* Code for Firefox */
+  color: var(--standard-text) !important;
+  background: var(--primary-blue) !important;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  text-align: center;
+  background-color: var(--primary-grey) !important;
+  border-bottom: 1px solid var(--secondary-grey) !important;
+  z-index: 9999;
+  width: 100%;
+  word-spacing: 4px;
+}
+
+.headerText {
+  letter-spacing: 3px;
+  padding: 15px 15px 11px 15px !important;
+}
+
+h2.headerText {
+  font-weight: 900 !important;
+  color: var(--primary-blue) !important;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 10px;
+  position: relative;
+  top: 68px;
+  max-width: 1100px;
+  height: 600px;
+}
+
+.topicInput > input {
+  color: var(--standard-text) !important;
+}
+
+.instructions {
+  position: relative;
+  top: 15px;
+}
+
+.resultContent {
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.contextButton {
+  font-size: 0.8rem;
+  position: relative;
+  top: -2px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: bold;
+}
+
+.contextButton:hover {
+  color: var(--primary-blue);
+}
+
+.contextButtonDisabled {
+  font-size: 0.8rem;
+  position: relative;
+  top: -2px;
+  padding: 10px;
+  cursor: default;
+  text-align: center;
+  color: var(--disabled-text);
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: bold;
+}
+
+.contextCounter {
+  position: relative;
+  top: -4px;
+  padding: 10px;
+  color: var(--primary-blue);
+  font-weight: bold;
+  text-align: center;
+  cursor: default;
+  word-spacing: -2px;
+}
+
+.contextCounter > span {
+  position: relative;
+  top: 1px;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+.pluralities {
+  position: relative;
+  top: -6px;
+  left: 10px;
+}
+
+.buttonRow {
+  /* padding: 6px 0 10px 0 !important; */
+  padding: 0 !important;
+  /* margin: 0 !important; */
+}
+
+.buttonRow > * > svg{
+  position: relative;
+  top: 2px;
+  right: 6px;
+}
+
+.highlightSearchTerm {
+  font-weight: 900;
+  color: var(--yellow-accent);
+}
+
+.sortDropdown {
+  float: right;
+  position: relative;
+  top: 3px;
+}
+
+.result {
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: var(--primary-grey);
+  border: 1px solid var(--secondary-grey);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.result:hover {
+  background-color: var(--secondary-grey);
+}
+
+.articleWrapper {
+  margin-top: 30px !important;
+}
+
+.articleHead {
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.articleTypeSymbol {
+  background-color: var(--primary-grey);
+  border: 1px solid var(--secondary-grey);
+  border-radius: 10px;
+  height: 50px;
+  width: 50px;
+  float: left;
+}
+
+.articleHeadContent {
+  padding: 5px 8px 5px 8px;
+  float: left;
+}
+
+.articleHeadHeader {
+  font-weight: bold;
+}
+
+.articleHeadTag {
+  color: var(--muted-text);
+  position: relative;
+  left: 6px;
+}
+
+.searchBar {
+  border-radius: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 10px 0 10px 0;
+}
+.searchAfterUnScrolled > .searchBar {
+  background-color: var(--primary-grey);
+  transition: background-color 0.15s;
+  border: 1px solid var(--secondary-grey);
+}
+.searchAfterScrolled > .searchBar {
+  background-color: var(--body-background);
+  border: 1px solid var(--secondary-grey);
+  transition: background-color 0.15s;
+}
+.searchInitial > .searchBar {
+  background-color: var(--primary-grey);
+  transition: background-color 0.15s;
+}
+
+.searchInitial {
+  position: absolute;
+  top: 45%;
+  margin: 0;
+  transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  padding-top: 30px;
+  padding-bottom: 15px;
+}
+
+.searchAfter {
+  margin: 0;
+  z-index: 1000;
+  padding-top: 30px;
+  padding-bottom: 15px;
+}
+.searchAfterScrolled {
+  position: fixed;
+  top: 45px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 0 0 10px 10px;
+  -webkit-box-shadow: var(--box-shadow);
+  -moz-box-shadow: var(--box-shadow);
+  box-shadow: var(--box-shadow);
+  background-color: var(--primary-grey);
+  border: 1px solid var(--secondary-grey);
+  transition: border-width 0.15s, padding 0.05s, background-color 0.15s;
+}
+.searchAfterUnScrolled {
+  position: fixed;
+  top: 53px;
+  border-radius: 10px;
+  background-color: var(--body-background);
+  transition: border-width 0.15s, padding 0.05s, background-color 0.15s;
+}
+
+.quoteWithinArticleContainer {
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.quoteWithinArticle {
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: var(--primary-grey);
+  color: var(--muted-background);
+  border: 1px solid var(--primary-grey);
+  width: calc(100% - 40px);
+}
+
+.quoteWithinArticleHighlight {
+  position: relative;
+  left: -20px;
+  width: calc(100% + 40px);
+  z-index: 1;
+  margin: -2px 0 -2px 0;
+  padding: 15px;
+  border-radius: 10px;
+  color: var(--standard-text);
+  background-color: var(--secondary-grey);
+  font-size: 1.1rem;
+  -webkit-box-shadow: var(--box-shadow);
+  -moz-box-shadow: var(--box-shadow);
+  box-shadow: var(--box-shadow);
+}
+
+.backFromQuote:hover {
+  color: var(--primary-blue);
+}
+
+.moveDown {
+  position: relative;
+  top: 100px;
+}
+
+.navigationButtons {
+  margin-top: 15px;
+}

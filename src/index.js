@@ -1,14 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './style/index.css';
 import 'semantic-ui-css/semantic.min.css';
 import './style/loader.css'
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { Provider } from './mobx/context';
+import mainStore from './mobx/mainStore';
+
+const stores = {
+	mainStore,
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider { ...stores }>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -7,7 +7,7 @@ export class Head extends Component {
     return (
       <div className="header">
         <Router forceRefresh={true}>
-          <Link to="/"><Header as="h2" className="headerText">WHAT THEY SAID</Header></Link>
+          <Link to="/"><Header as="h2" className="headerText">What they said</Header></Link>
         </Router>
       </div>
     )

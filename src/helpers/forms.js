@@ -36,9 +36,13 @@ export function supplyAllForms (originalSearch) {
 
   let possibleForms = [];
   suffixes.forEach(suffix => {
-    possibleForms.push(originalSearch+suffix);
+    possibleForms.push(originalSearch + suffix);
+    if (originalSearch.substring(originalSearch.length - suffix.length, originalSearch.length) === suffix) {
+      possibleForms.push(originalSearch.substring(0, originalSearch.length - suffix.length));
+    }
   })
   possibleForms.push(originalSearch);
+  // console.log(possibleForms);
   return possibleForms;
 }
 
