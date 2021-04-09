@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { suffixes } from '../helpers/forms'
 import Quote from './Quote'
-import TwitterLogo from '../assets/twitter.png'
+// import TwitterLogo from '../assets/twitter.png'
 import { Fragment } from 'react'
+import { FaTwitter, FaMicrophone, FaNewspaper } from 'react-icons/fa';
 const { DateTime } = require("luxon")
 
 export class Article extends Component {
   renderQuotes = () => {
-    const { searchValue, showAllForms, content } = this.props;
+    const { searchValue, showAllForms, articleData } = this.props;
     const suffixInserts = suffixes.join('|');
     let regExpString;
     if (showAllForms) {
@@ -17,7 +18,7 @@ export class Article extends Component {
     }
 
     const regExp = new RegExp(regExpString, "i");
-    var separatedSentenceElements = content.split(/(?<=[.!?])/);
+    var separatedSentenceElements = articleData.content.split(/(?<=[.!?])/);
 
     // create array of indexes of sentences matching the search term
     var indexesOfMatchingSentences = [];
@@ -43,11 +44,13 @@ export class Article extends Component {
       }
     })
 
+
     // for each capture group, render something
     return captureGroups.map((captureGroup, i) => {
       return (
-        <Fragment key = { `${this.props.articleId}${i}` }>
+        <Fragment key = { `${articleData._id}${i}` }>
           <Quote
+            articleData = { articleData }
             searchValue = { searchValue }
             captureGroup = { captureGroup }
             separatedSentenceElements = { separatedSentenceElements }
@@ -59,25 +62,33 @@ export class Article extends Component {
   }
 
   render() {
-    const { date, method, name, articleId } = this.props;
+    const { articleData, personData } = this.props;
+    const { date, type: method, _id: articleId } = articleData;
+    const name = `${personData.first_name} ${personData.last_name}`;
+
     const methods = {
       speech: {
         name: 'Speech',
         phrase: 'during a speech',
         link: false,
+        symbol: FaMicrophone,
+        symbolClassName: 'speechSymbol',
         foreword: 'by',
       },
       tweet: {
         name: 'Tweet',
         phrase: 'in a Tweet',
         link: true,
-        symbol: TwitterLogo,
+        symbol: FaTwitter,
+        symbolClassName: 'tweetSymbol',
         foreword: 'by',
       },
       statement: {
         name: 'Statement',
         phrase: 'in a statement',
         link: false,
+        symbol: FaNewspaper,
+        symbolClassName: 'statementSymbol',
         foreword: 'by',
       },
       interview: {
@@ -85,15 +96,18 @@ export class Article extends Component {
         phrase: 'in an interview',
         link: false,
         foreword: 'with',
+        symbol: FaMicrophone,
+        symbolClassName: 'interviewSymbol',
         postword: `(said by ${ name })`,
       }
     }
     const formattedDate = DateTime.fromISO(date).toFormat('DDD');
+    const Symbol = methods[method].symbol;
 
     return (
       <div className="articleWrapper" key={ articleId }>
         <div className="articleHead">
-          <div className="articleTypeSymbol"><img src={ methods[method].symbol } alt=""></img></div>
+          <div className="articleTypeSymbol"><Symbol className={ methods[method].symbolClassName }/></div>
           <div className="articleHeadContent">
             <span className="articleHeadHeader">{ methods[method].name }</span>
             <span className="articleHeadTag">{ methods[method].foreword } { name } on { formattedDate } { methods[method]?.postword ?? '' }</span>

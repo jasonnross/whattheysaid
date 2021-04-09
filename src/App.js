@@ -1,35 +1,39 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
+
 import Head from './components/Head';
+
 import Home from './pages/Home';
 import About from './pages/About';
 import Quote from './pages/Quote';
-import { observer } from 'mobx-react';
-import { useStore } from './mobx/context';
+import Go from './components/Go';
 
-const App = observer(() => {
-  const store = useStore();
-  setInterval(() => {
-    console.log(store);
-  }, 8000);
+function App() {
   return (
-    <Fragment>
-    <Head />
-    <div className="container">
     <Router>
-      <Switch>
-        <Route exact path="/"><Home mainStore={ store } /></Route>
-        <Route exact path="/quote"><Quote mainStore={ store } /></Route>
-        <Route exact path="/about"><About mainStore={ store } /></Route>
-      </Switch>
+      <Head />
+      <div className="container">
+        <Switch>
+          <Route exact path="/">
+            <Go tool={ Home }/>
+          </Route>
+
+          <Route path="/quote">
+            <Go tool={ Quote }/>
+          </Route>
+
+          <Route path="/about">
+            <Go tool={ About }/>
+          </Route>
+
+        </Switch>
+      </div>
     </Router>
-    </div>
-  </Fragment>
   )
-})
+}
 
 export default App;

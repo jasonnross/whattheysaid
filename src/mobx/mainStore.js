@@ -1,7 +1,10 @@
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 
 class mainStore {
-  @observable title = "Coding is Love";
+  @observable articles = null;
+  @action addArticles = (articles) => {
+    this.articles = articles;
+  }
 }
 
 export default new mainStore();

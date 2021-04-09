@@ -45,24 +45,24 @@ import { inject, observer } from 'mobx-react';
   calculateSearchSize = () => {
     const containerWidth = getComputedStyle(document.querySelector('.container')).width;
     const searchWidth = parseInt(containerWidth) - 20;
-    document.getElementById('search').style.width = `${searchWidth}px`;
+    if (document.getElementById('search')) {
+      document.getElementById('search').style.width = `${searchWidth}px`;
+    }
   }
   componentDidUpdate() {
     this.calculateSearchSize();
   }
   componentDidMount = async () => {
-    setInterval(() => {
-      const { mainStore } = this.props;
-      console.log(mainStore)
-    }, 8000);
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.calculateSearchSize);
     document.addEventListener('keydown', this.onEnterKey, false);
     const persons = await apiRequest({ endpoint: 'persons' });
 
+    console.log(persons)
+
     const { mainStore } = this.props;
     mainStore.persons = persons;
-
+    // this.nameInput.focus();
     this.setState({
       loading: false,
     })
@@ -109,14 +109,21 @@ import { inject, observer } from 'mobx-react';
     const person = persons[i];
     return articles.map((article, i) => {
       return (
-        <Fragment key={ article._id+i }><Article articleId={ article._id } name={ `${person.first_name} ${person.last_name}` } date={ article.date } method={ article.type } searchValue={ searchValue } showAllForms={ showAllForms } content={ article.content } /></Fragment>
+        <Fragment key={ article._id+i }>
+          <Article
+            articleData={ article }
+
+            personData={ person }
+
+            searchValue={ searchValue }
+            showAllForms={ showAllForms }
+          />
+        </Fragment>
       )
     })
   }
   onPersonChange = (event, {value}) => {
-
     const { persons } = this.props.mainStore
-
     const i = _.findIndex(persons, function(o) { return o._id === value; });
     const person = persons[i];
     const { current } = this.state;
@@ -162,40 +169,41 @@ import { inject, observer } from 'mobx-react';
     } else {
       return (
         <div>
-            <div className={ getSearchClassName(initial, scrolled) } id="search">
-              <div className="searchBar">
-                What did
-                &nbsp;&nbsp;
-                <Dropdown
-                  inline
-                  placeholder='this person'
-                  onChange={this.onPersonChange}
-                  options={ this.renderPersonsOptions()}
-                />
-                &nbsp;&nbsp;
-                say about
-                &nbsp;&nbsp;
-                <Input className="topicInput" transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }/>
-                { (!current.selectedPerson || !current.searchValue || ( current.searchValue === last.searchValue && current.selectedPerson === last.selectedPerson && current.showAllForms === last.showAllForms )) ? <Button primary disabled>?</Button> : <Button onClick={ this.search } primary>?</Button> }
-              </div>
-
-              <div className="navigationButtons">
-                <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ current.showAllForms }/><span className="pluralities">Explore all pluralities and forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
-                <Dropdown
-                  className="sortDropdown"
-                  inline
-                  placeholder="Newest first"
-                >
-                  <Dropdown.Menu>
-                    <Dropdown.Item text='Newest first' />
-                    <Dropdown.Item text='Most relevant' />
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
+          <div className={ getSearchClassName(initial, scrolled) } id="search">
+            <div className="searchBar">
+              What did
+              &nbsp;&nbsp;
+              <Dropdown
+                className="personsSelect"
+                search
+                selection
+                placeholder='this person'
+                onChange={this.onPersonChange}
+                options={ this.renderPersonsOptions()}
+                openOnFocus
+                searchInput={{ autoFocus: true }}
+              />
+              &nbsp;&nbsp;
+              say about
+              &nbsp;&nbsp;
+              <Input className="topicInput" transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }/>
+              { (!current.selectedPerson || !current.searchValue || ( current.searchValue === last.searchValue && current.selectedPerson === last.selectedPerson && current.showAllForms === last.showAllForms )) ? <Button primary disabled>?</Button> : <Button onClick={ this.search } primary>?</Button> }
             </div>
 
-
-
+            <div className="navigationButtons">
+              <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ current.showAllForms }/><span className="pluralities">Search all forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
+              <Dropdown
+                className="sortDropdown"
+                inline
+                placeholder="Newest first"
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item text='Newest first' />
+                  <Dropdown.Item text='Most relevant' />
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
 
           <div className="moveDown">
           { !initial &&

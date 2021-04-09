@@ -3,16 +3,16 @@ html {
 }
 
 :root {
-  --primary-blue: #2185d0;
-  --primary-grey: #15191d;
-  --secondary-grey: #22282e;
-  --standard-text: #e4e5eb;
+  --primary-blue: #2AA0F9;
+  --primary-grey: #2a2f35;
+  --secondary-grey: #353a41;
+  --standard-text: #EFF0F4;
   --disabled-text: #636363;
-  --muted-text: #636363;
-  --muted-background: #2e2e2e;
-  --body-background: #0b0d0f;
+  --muted-text: #6a6a6a;
+  --muted-background: #68686d;
+  --body-background: #13161a;
   --yellow-accent: #feff9d;
-  --box-shadow: 2px 2px 15px 1px var(--body-background);
+  --box-shadow: 2px 8px 15px 1px var(--body-background);
 }
 
 body {
@@ -66,10 +66,17 @@ h2.headerText {
   padding: 10px;
   position: relative;
   top: 68px;
-  max-width: 1100px;
-  height: 600px;
+  max-width: 1300px;
+  height: calc(100% - 100px);
 }
 
+#root {
+  height: 100%;
+}
+
+.topicInput {
+  width: 6rem;
+}
 .topicInput > input {
   color: var(--standard-text) !important;
 }
@@ -193,17 +200,8 @@ h2.headerText {
   margin-bottom: 15px;
 }
 
-.articleTypeSymbol {
-  background-color: var(--primary-grey);
-  border: 1px solid var(--secondary-grey);
-  border-radius: 10px;
-  height: 50px;
-  width: 50px;
-  float: left;
-}
-
 .articleHeadContent {
-  padding: 5px 8px 5px 8px;
+  padding: 5px 8px 5px 15px;
   float: left;
 }
 
@@ -227,20 +225,21 @@ h2.headerText {
   background-color: var(--primary-grey);
   transition: background-color 0.15s;
   border: 1px solid var(--secondary-grey);
-}
+  }
 .searchAfterScrolled > .searchBar {
   background-color: var(--body-background);
-  border: 1px solid var(--secondary-grey);
   transition: background-color 0.15s;
+  border: 1px solid var(--secondary-grey);
 }
 .searchInitial > .searchBar {
   background-color: var(--primary-grey);
   transition: background-color 0.15s;
+  border: 1px solid var(--secondary-grey);
 }
 
 .searchInitial {
   position: absolute;
-  top: 45%;
+  top: 40%;
   margin: 0;
   transform: translateY(-50%);
   -ms-transform: translateY(-50%);
@@ -288,24 +287,24 @@ h2.headerText {
 .quoteWithinArticle {
   border-radius: 10px;
   padding: 15px;
-  margin-bottom: 15px;
   background-color: var(--primary-grey);
   color: var(--muted-background);
   border: 1px solid var(--primary-grey);
-  width: calc(100% - 40px);
+  width: calc(100% - 20px);
 }
 
 .quoteWithinArticleHighlight {
+  display: block;
   position: relative;
   left: -20px;
+  padding: 15px;
+  margin: -2px 0 -2px 0;
   width: calc(100% + 40px);
   z-index: 1;
-  margin: -2px 0 -2px 0;
-  padding: 15px;
   border-radius: 10px;
   color: var(--standard-text);
   background-color: var(--secondary-grey);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   -webkit-box-shadow: var(--box-shadow);
   -moz-box-shadow: var(--box-shadow);
   box-shadow: var(--box-shadow);
@@ -322,4 +321,171 @@ h2.headerText {
 
 .navigationButtons {
   margin-top: 15px;
+}
+
+.overrideLinkStyling {
+  color: var(--standard-text);
+}
+.overrideLinkStyling:hover {
+  color: var(--standard-text);
+}
+
+.filledCount {
+  display: inline-block;
+  background-color: var(--primary-blue);
+  height: 4px;
+  width: 4px;
+  border-radius: 2px;
+  margin: 0 3px 0 3px;
+}
+
+.unFilledCount {
+  display: inline-block;
+  background-color: var(--muted-background);
+  height: 4px;
+  width: 4px;
+  border-radius: 2px;
+  margin: 0 3px 0 3px;
+}
+
+.articleTypeSymbol {
+  background-color: var(--primary-grey);
+  border: 1px solid var(--secondary-grey);
+  border-radius: 10px;
+  height: 50px;
+  width: 50px;
+  float: left;
+  text-align: center;
+}
+
+.articleTypeSymbol > svg {
+  height: 50px;
+}
+
+.speechSymbol {
+  font-size: 0.7rem;
+}
+.tweetSymbol {
+  font-size: 1rem;
+}
+.statementSymbol {
+  font-size: 1rem;
+}
+.interviewSymbol {
+  font-size: 1rem;
+}
+
+
+
+/* EVERYTHING FOR DROPDOWN */
+
+/* INITIAL */
+
+.searchInitial .personsSelect {
+  color: #FFF !important;
+  background-color: var(--body-background) !important;
+  border: 1px solid var(--primary-grey) !important;
+  cursor: pointer !important;
+  border-radius: 10px !important;
+}
+
+.searchInitial .personsSelect > input {
+  color: #fff !important;
+  cursor: pointer !important;
+}
+.searchInitial .personsSelect .item:hover {
+  background-color: var(--body-background) !important;
+}
+.searchInitial .personsSelect > div {
+  /* background-color: var(--primary-grey) !important; */
+  border: 0px solid var(--primary-grey) !important;
+}
+.searchInitial .personsSelect > div > div {
+  color: #fff !important;
+  background-color: var(--primary-grey) !important;
+  border-top: 1px solid var(--primary-grey) !important;
+  border-bottom: 1px solid var(--primary-grey) !important;
+  /* border-radius: 0 0 .28571429rem .28571429rem !important; */
+}
+
+.searchInitial .personsSelect > div[role=listbox] {
+  background-color: var(--primary-grey) !important;
+  /* does scroll bar */
+  background-color: var(--primary-grey) !important;
+  box-shadow: var(--box-shadow) !important;
+  border-radius: 0px 0px 10px 10px !important;
+}
+
+/* UNSCROLLED */
+
+.searchAfterUnScrolled .personsSelect {
+  color: #FFF !important;
+  background-color: var(--body-background) !important;
+  border: 1px solid var(--primary-grey) !important;
+  cursor: pointer !important;
+  border-radius: 10px !important;
+}
+
+.searchAfterUnScrolled .personsSelect > input {
+  color: #fff !important;
+  cursor: pointer !important;
+}
+.searchAfterUnScrolled .personsSelect .item:hover {
+  background-color: var(--body-background) !important;
+}
+.searchAfterUnScrolled .personsSelect > div {
+  /* background-color: var(--primary-grey) !important; */
+  border: 0px solid var(--primary-grey) !important;
+}
+.searchAfterUnScrolled .personsSelect > div > div {
+  color: #fff !important;
+  background-color: var(--primary-grey) !important;
+  border-top: 1px solid var(--primary-grey) !important;
+  border-bottom: 1px solid var(--primary-grey) !important;
+  /* border-radius: 0 0 .28571429rem .28571429rem !important; */
+}
+
+.searchAfterUnScrolled .personsSelect > div[role=listbox] {
+  background-color: var(--primary-grey) !important;
+  /* does scroll bar */
+  background-color: var(--primary-grey) !important;
+  box-shadow: var(--box-shadow) !important;
+  border-radius: 0px 0px 10px 10px !important;
+}
+
+/* SCROLLED */
+
+.searchAfterScrolled .personsSelect {
+  color: #FFF !important;
+  background-color: var(--primary-grey) !important;
+  border: 1px solid var(--primary-grey) !important;
+  cursor: pointer !important;
+  border-radius: 10px !important;
+}
+
+.searchAfterScrolled .personsSelect > input {
+  color: #fff !important;
+  cursor: pointer !important;
+}
+.searchAfterScrolled .personsSelect .item:hover {
+  background-color: var(--primary-grey) !important;
+}
+.searchAfterScrolled .personsSelect > div {
+  /* background-color: var(--primary-grey) !important; */
+  border: 0px solid var(--primary-grey) !important;
+}
+.searchAfterScrolled .personsSelect > div > div {
+  color: #fff !important;
+  background-color: var(--body-background) !important;
+  border-top: 1px solid var(--body-background) !important;
+  border-bottom: 1px solid var(--body-background) !important;
+  /* border-radius: 0 0 .28571429rem .28571429rem !important; */
+}
+
+.searchAfterScrolled .personsSelect > div[role=listbox] {
+  background-color: var(--primary-grey) !important;
+  /* does scroll bar */
+  background-color: var(--primary-grey) !important;
+  box-shadow: var(--box-shadow) !important;
+  border-radius: 0px 0px 10px 10px !important;
 }

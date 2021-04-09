@@ -42,7 +42,6 @@ export function supplyAllForms (originalSearch) {
     }
   })
   possibleForms.push(originalSearch);
-  // console.log(possibleForms);
   return possibleForms;
 }
 
