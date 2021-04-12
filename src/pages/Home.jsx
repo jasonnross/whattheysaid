@@ -55,6 +55,7 @@ import { FaArrowDown } from 'react-icons/fa';
     this.calculateSearchSize();
   }
   componentDidMount = async () => {
+    console.log(process.env.REACT_APP_API_BASE_URL);
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.calculateSearchSize);
     document.addEventListener('keydown', this.onEnterKey, false);
