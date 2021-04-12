@@ -5,7 +5,7 @@ html {
 :root {
   --primary-blue: #2AA0F9;
   --primary-grey: #2a2f35;
-  --secondary-grey: #353a41;
+  --secondary-grey: #2f343a;
   --standard-text: #EFF0F4;
   --disabled-text: #636363;
   --muted-text: #6a6a6a;
@@ -172,15 +172,23 @@ h2.headerText {
 }
 
 .sortDropdown {
-  float: right;
   position: relative;
-  top: 3px;
+  right: 2px;
+  top: -1px;
+  float: right;
+  cursor: pointer;
 }
 
+.sortDropdown > svg {
+  position: relative;
+  padding-right: 6px;
+  top: 2px;
+  transform: scale(1.5);
+}
 .result {
   border-radius: 10px;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 17px;
   background-color: var(--primary-grey);
   border: 1px solid var(--secondary-grey);
   cursor: pointer;
@@ -197,7 +205,7 @@ h2.headerText {
 
 .articleHead {
   height: 50px;
-  margin-bottom: 15px;
+  margin-bottom: 17px;
 }
 
 .articleHeadContent {
@@ -220,6 +228,9 @@ h2.headerText {
   margin-bottom: 10px;
   text-align: center;
   padding: 10px 0 10px 0;
+}
+.searchBar Button {
+  border-radius: 10px !important;
 }
 .searchAfterUnScrolled > .searchBar {
   background-color: var(--primary-grey);
@@ -322,6 +333,18 @@ h2.headerText {
 .navigationButtons {
   margin-top: 15px;
 }
+
+.navigationButtons .checkbox label::before, label::after {
+  position: relative;
+  top: 2px !important;
+  height: 1.2rem !important;
+  width: 3.2rem !important;
+}
+.navigationButtons .checkbox label::after {
+  width: 1.2rem !important;
+}
+
+
 
 .overrideLinkStyling {
   color: var(--standard-text);
@@ -488,4 +511,7 @@ h2.headerText {
   background-color: var(--primary-grey) !important;
   box-shadow: var(--box-shadow) !important;
   border-radius: 0px 0px 10px 10px !important;
+}
+.d-none {
+  display: none;
 }

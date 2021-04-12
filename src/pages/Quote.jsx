@@ -51,8 +51,6 @@ import getURLParams from '../helpers/urlParams';
           if ((captureGroups[0] - context_level) <= 0) { return 0 }
           return captureGroups[0] - context_level;
         }
-        console.log(`start index of part #1: ${startIndexOfFirstPart()}`)
-        console.log(`end index of part #1: ${endIndexOfFirstPart()}`)
         return separatedSentenceElements.slice(startIndexOfFirstPart(), endIndexOfFirstPart());
       }
       let middlePart = () => {
@@ -64,8 +62,6 @@ import getURLParams from '../helpers/urlParams';
           if (captureGroups[captureGroups.length-1] + context_level >= separatedSentenceElements.length-1) { return separatedSentenceElements.length-1 }
           return captureGroups[captureGroups.length-1] + context_level + 1;
         }
-        console.log(`start index of part #2: ${startIndexOfMiddlePart()}`)
-        console.log(`end index of part #2: ${endIndexOfMiddlePart()}`)
         return separatedSentenceElements.slice(startIndexOfMiddlePart(), endIndexOfMiddlePart());
       }
       let lastPart = () => {
@@ -75,11 +71,8 @@ import getURLParams from '../helpers/urlParams';
         }
         let endIndexOfLastPart = () => {
           if (captureGroups[captureGroups.length-1] + context_level + 1 >= separatedSentenceElements.length) { console.log('e'); return separatedSentenceElements.length-1 }
-          console.log(captureGroups[captureGroups.length-1])
           return captureGroups[captureGroups.length-1] + 2 + context_level;
         }
-        console.log(`start index of part #3: ${startIndexOfLastPart()}`)
-        console.log(`end index of part #3: ${endIndexOfLastPart()}`)
         return separatedSentenceElements.slice(startIndexOfLastPart(), endIndexOfLastPart());
       }
 
@@ -96,8 +89,6 @@ import getURLParams from '../helpers/urlParams';
     }
 
     const thisPerson = person();
-
-    console.log(thisPerson)
 
     return (
       <div className="quoteWithinArticleContainer">

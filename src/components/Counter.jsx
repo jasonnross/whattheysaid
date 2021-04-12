@@ -11,10 +11,6 @@ export class Counter extends Component {
     const shownParts = separatedSentenceElements.slice(earliestShownIndex, latestShownIndex);
     let partsAfter = separatedSentenceElements.slice(latestShownIndex, separatedSentenceElements.length);
 
-    console.log('partsBefore', partsBefore);
-    console.log('shownParts', shownParts);
-    console.log('partsAfter', partsAfter);
-
     let returnArray = [];
 
     while (returnArray.length < 21 && shownParts.length > 0) {

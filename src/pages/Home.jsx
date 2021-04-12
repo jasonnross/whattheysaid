@@ -5,6 +5,7 @@ import apiRequest from '../helpers/api';
 import _ from 'lodash'
 import Loader from '../components/Loader';
 import { inject, observer } from 'mobx-react';
+import { FaArrowDown } from 'react-icons/fa';
 
 @inject('mainStore')
 @observer class Home extends Component {
@@ -17,6 +18,7 @@ import { inject, observer } from 'mobx-react';
       selectedPerson: null,
       person: {},
       showAllForms: true,
+      sort: 'newest',
     },
     last: {
       searchValue: null,
@@ -57,9 +59,6 @@ import { inject, observer } from 'mobx-react';
     window.addEventListener('resize', this.calculateSearchSize);
     document.addEventListener('keydown', this.onEnterKey, false);
     const persons = await apiRequest({ endpoint: 'persons' });
-
-    console.log(persons)
-
     const { mainStore } = this.props;
     mainStore.persons = persons;
     // this.nameInput.focus();
@@ -81,13 +80,13 @@ import { inject, observer } from 'mobx-react';
   }
   search = async () => {
     this.setState({ loadingResult: true })
-    const { searchValue, selectedPerson, showAllForms } = this.state.current;
+    const { searchValue, selectedPerson, showAllForms, sort } = this.state.current;
     const { persons } = this.props.mainStore;
     const i = _.findIndex(persons, function(o) { return o._id === selectedPerson; });
     const person = persons[i];
     if ( !searchValue || !selectedPerson ) { return false }
     const { addArticles } = this.props.mainStore;
-    const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false') } });
+    const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false'), sort } });
     addArticles(articles);
     this.setState({ initial: false, last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person, showAllForms: showAllForms }, loadingResult: false });
   }
@@ -152,13 +151,27 @@ import { inject, observer } from 'mobx-react';
     }
   }
   toggleShowAllForms = () => {
-    const { current } = this.state;
+    const { current, initial } = this.state;
     current.showAllForms = !!!current.showAllForms;
     this.setState({ current: current })
-    this.search()
+    if (!initial) {
+      this.search()
+    }
+  }
+  cycleSort = () => {
+    const { current } = this.state;
+    if (current.sort === 'newest') {
+      current.sort = 'oldest'
+    } else {
+      current.sort = 'newest'
+    }
+    this.setState({ current: current });
+    this.search();
   }
   render() {
     const { loading, loadingResult, initial, scrolled, current, last } = this.state;
+    const handleFocus = (event) => event.target.select();
+
     function getSearchClassName(initial, scrolled) {
       if (initial) { return 'searchInitial' }
       if (scrolled) { return 'searchAfter searchAfterScrolled' }
@@ -186,22 +199,25 @@ import { inject, observer } from 'mobx-react';
               &nbsp;&nbsp;
               say about
               &nbsp;&nbsp;
-              <Input className="topicInput" transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }/>
+              <Input className="topicInput" transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }  onFocus={handleFocus} />
               { (!current.selectedPerson || !current.searchValue || ( current.searchValue === last.searchValue && current.selectedPerson === last.selectedPerson && current.showAllForms === last.showAllForms )) ? <Button primary disabled>?</Button> : <Button onClick={ this.search } primary>?</Button> }
             </div>
 
             <div className="navigationButtons">
               <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ current.showAllForms }/><span className="pluralities">Search all forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
-              <Dropdown
-                className="sortDropdown"
-                inline
-                placeholder="Newest first"
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item text='Newest first' />
-                  <Dropdown.Item text='Most relevant' />
-                </Dropdown.Menu>
-              </Dropdown>
+              <span className={ initial ? 'd-none' : '' }>
+              {current.sort === 'newest' && <div className="sortDropdown" onClick={ () => this.cycleSort() }>
+                <FaArrowDown />
+                Newest
+              </div>}
+              {current.sort === 'oldest' && <div className="sortDropdown" onClick={ () => this.cycleSort() }>
+                <FaArrowDown />
+                Oldest
+              </div>
+              }
+
+              </span>
+
             </div>
           </div>
 
