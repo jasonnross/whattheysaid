@@ -37,9 +37,6 @@ import getURLParams from '../helpers/urlParams';
     const { mainStore } = this.props;
     var separatedSentenceElements = article.content.split(/(?<=[.!?])/);
 
-    // console.log('sentence elements:', separatedSentenceElements)
-    // console.log('capture groups', captureGroups);
-
     function getExtraContextFromOriginalQuote({ separatedSentenceElements, captureGroups, context_level }) {
       // first part
       let firstPart = () => {

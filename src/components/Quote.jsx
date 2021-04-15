@@ -20,8 +20,6 @@ export class Quote extends Component {
   render() {
     const { contextLevel } = this.state;
     const { searchValue, captureGroup, separatedSentenceElements, showAllForms, articleData } = this.props;
-    console.log('sentence array', separatedSentenceElements);
-    console.log('capture group', captureGroup);
     const indexOfEarliestMention = captureGroup[0];
     const indexOfLatestMention = captureGroup[captureGroup.length - 1];
     const maximumIndexOfSentence = separatedSentenceElements.length;
@@ -30,7 +28,6 @@ export class Quote extends Component {
     const arrayToUse = separatedSentenceElements.slice(targetBeginningIndex, targetEndIndex);
     arrayToUse[0] = arrayToUse[0].trim();
 
-    console.log('arrayToUse', arrayToUse);
 
     const possibleForms = supplyAllForms(searchValue);
     const regExpSplitString = showAllForms ? new RegExp('\\b('+possibleForms.join('|')+')\\b', "i") : new RegExp('\\b('+searchValue+')\\b', "i")

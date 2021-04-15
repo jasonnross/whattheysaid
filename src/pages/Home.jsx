@@ -5,7 +5,8 @@ import apiRequest from '../helpers/api';
 import _ from 'lodash'
 import Loader from '../components/Loader';
 import { inject, observer } from 'mobx-react';
-import { FaArrowDown } from 'react-icons/fa';
+import { FaArrowDown, FaRegFileExcel } from 'react-icons/fa';
+import { pluralizeType } from 'helpers/strings';
 
 @inject('mainStore')
 @observer class Home extends Component {
@@ -55,7 +56,6 @@ import { FaArrowDown } from 'react-icons/fa';
     this.calculateSearchSize();
   }
   componentDidMount = async () => {
-    console.log(process.env.REACT_APP_API_BASE_URL);
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.calculateSearchSize);
     document.addEventListener('keydown', this.onEnterKey, false);
@@ -88,7 +88,7 @@ import { FaArrowDown } from 'react-icons/fa';
     if ( !searchValue || !selectedPerson ) { return false }
     const { addArticles } = this.props.mainStore;
     const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false'), sort } });
-    addArticles(articles);
+    addArticles(articles.articles, articles.typesSearched);
     this.setState({ initial: false, last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person, showAllForms: showAllForms }, loadingResult: false });
   }
   renderPersonsOptions = () => {
@@ -138,7 +138,17 @@ import { FaArrowDown } from 'react-icons/fa';
   }
   renderResultDescription = () => {
     const { last, loadingResult } = this.state;
-    const { articles } = this.props.mainStore;
+    const { articles, typesSearched } = this.props.mainStore;
+    function renderTypesSearched(typesSearched) {
+      console.log(typesSearched);
+      return typesSearched.map((typeSearched, dex) => {
+        if (dex === typesSearched.length) {
+          return <Fragment><span>{ `${typeSearched.count} ${pluralizeType(typeSearched._id, typeSearched.count)}` }</span></Fragment>
+        } else {
+          return <Fragment><span>{ `${typeSearched.count} ${pluralizeType(typeSearched._id, typeSearched.count)}` }</span><br /></Fragment>
+        }
+      })
+    }
     if (loadingResult) {
       return <div className="resultLoaderDiv"><Loader /></div>
     } else {
@@ -146,7 +156,16 @@ import { FaArrowDown } from 'react-icons/fa';
         if (articles.length > 0) {
           return <span>We found <b>{ `${last.person.first_name} ${last.person.last_name}` }</b> said:</span>
         } else {
-          return <span>We found NO EVIDENCE of <b>{ `${last.person.first_name} ${last.person.last_name}` }</b> ever using the phrase "{ last.searchValue }".</span>
+          return (
+            <div className="noResults">
+              <FaRegFileExcel />
+              <div>We searched</div>
+              <div className="sourcesSearched">
+              { renderTypesSearched(typesSearched) }
+              </div>
+              <div>and found NO EVIDENCE of <b>{ `${last.person.first_name} ${last.person.last_name}` }</b> ever using the phrase "{ last.searchValue }".</div>
+            </div>
+          )
         }
       }
     }

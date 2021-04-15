@@ -45,7 +45,7 @@ h4 {
   top: 0;
   text-align: center;
   background-color: var(--primary-grey) !important;
-  border-bottom: 1px solid var(--secondary-grey) !important;
+  border-bottom: 1px solid var(--primary-grey) !important;
   z-index: 9999;
   width: 100%;
   word-spacing: 4px;
@@ -66,7 +66,7 @@ h2.headerText {
   padding: 10px;
   position: relative;
   top: 68px;
-  max-width: 1300px;
+  max-width: 1500px;
   height: calc(100% - 100px);
 }
 
@@ -344,8 +344,6 @@ h2.headerText {
   width: 1.2rem !important;
 }
 
-
-
 .overrideLinkStyling {
   color: var(--standard-text);
 }
@@ -386,16 +384,16 @@ h2.headerText {
 }
 
 .speechSymbol {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
 }
 .tweetSymbol {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 .statementSymbol {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 .interviewSymbol {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 
@@ -514,4 +512,21 @@ h2.headerText {
 }
 .d-none {
   display: none;
+}
+
+.noResults {
+  margin-top: 35px;
+  color: var(--muted-background);
+  /* font-size: 1.1rem; */
+  text-align: center;
+  line-height: 2.5rem;
+}
+
+.noResults > svg {
+  height: 5rem;
+  width: 5rem;
+}
+
+.noResults .sourcesSearched {
+  line-height: 1.9rem;
 }

@@ -3,7 +3,7 @@ import { suffixes } from '../helpers/forms'
 import Quote from './Quote'
 // import TwitterLogo from '../assets/twitter.png'
 import { Fragment } from 'react'
-import { FaTwitter, FaMicrophone, FaNewspaper } from 'react-icons/fa';
+import { FaTwitter, FaMicrophone, FaNewspaper, FaHandshake } from 'react-icons/fa';
 const { DateTime } = require("luxon")
 
 export class Article extends Component {
@@ -96,7 +96,7 @@ export class Article extends Component {
         phrase: 'in an interview',
         link: false,
         foreword: 'with',
-        symbol: FaMicrophone,
+        symbol: FaHandshake,
         symbolClassName: 'interviewSymbol',
         postword: `(said by ${ name })`,
       }
