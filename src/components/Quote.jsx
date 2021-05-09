@@ -20,6 +20,8 @@ export class Quote extends Component {
   render() {
     const { contextLevel } = this.state;
     const { searchValue, captureGroup, separatedSentenceElements, showAllForms, articleData } = this.props;
+
+
     const indexOfEarliestMention = captureGroup[0];
     const indexOfLatestMention = captureGroup[captureGroup.length - 1];
     const maximumIndexOfSentence = separatedSentenceElements.length;
@@ -42,14 +44,12 @@ export class Quote extends Component {
         }
       })
     })
-    // const allowContextIncrease = !!!(((indexOfLatestMention + (contextLevel + 1)) >= maximumIndexOfSentence  &&  (indexOfEarliestMention - (contextLevel + 1)) < 0) || (contextLevel + 1 > 10));
     const allowContextDecrease = !!(contextLevel > 1);
     const allowContextIncrease = !!((arrayToUse.length < 21) && arrayToUse.length < separatedSentenceElements.length);
-    // const allowContextDecrease = !!((arrayToUse.length < 21) && arrayToUse.length < separatedSentenceElements.length);
 
     return (
       <div className="result">
-        <Link className="overrideLinkStyling" to={`/quote?article_id=${articleData._id}&capture_groups=${captureGroup}&context_level=${contextLevel}`}>
+        <Link className="overrideLinkStyling" to={`/quote?article_id=${articleData._id}&capture_groups=${captureGroup}&context_level=${contextLevel}&search_value=${searchValue}`}>
           <div className="resultContent">
             "{ returnContent }"
           </div>

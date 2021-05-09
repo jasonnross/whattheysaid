@@ -7,6 +7,7 @@ import Loader from '../components/Loader';
 import { inject, observer } from 'mobx-react';
 import { FaArrowDown, FaRegFileExcel } from 'react-icons/fa';
 import { pluralizeType } from 'helpers/strings';
+import Cookies from 'universal-cookie';
 
 @inject('mainStore')
 @observer class Home extends Component {
@@ -56,16 +57,36 @@ import { pluralizeType } from 'helpers/strings';
     this.calculateSearchSize();
   }
   componentDidMount = async () => {
+    const { mainStore } = this.props;
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.calculateSearchSize);
     document.addEventListener('keydown', this.onEnterKey, false);
-    const persons = await apiRequest({ endpoint: 'persons' });
-    const { mainStore } = this.props;
-    mainStore.persons = persons;
-    // this.nameInput.focus();
-    this.setState({
-      loading: false,
-    })
+
+    const cookies = new Cookies();
+
+    const personsCookie = cookies.get('persons');
+
+    var persons;
+
+    if (personsCookie) {
+      persons = personsCookie;
+      mainStore.persons = persons;
+      this.setState({
+        loading: false,
+      })
+      const personsFetchedAfter = await apiRequest({ endpoint: 'persons' });
+      mainStore.persons = personsFetchedAfter;
+      cookies.set('persons', personsFetchedAfter);
+    } else {
+      persons = await apiRequest({ endpoint: 'persons' });
+      mainStore.persons = persons;
+      cookies.set('persons', persons);
+      this.setState({
+        loading: false,
+      })
+    }
+
+
 
   }
   componentWillUnmount() {
@@ -80,15 +101,17 @@ import { pluralizeType } from 'helpers/strings';
     }
   }
   search = async () => {
-    this.setState({ loadingResult: true })
+    this.setState({ loadingResult: true });
+    // pull input values from state;
     const { searchValue, selectedPerson, showAllForms, sort } = this.state.current;
     const { persons } = this.props.mainStore;
-    const i = _.findIndex(persons, function(o) { return o._id === selectedPerson; });
-    const person = persons[i];
+    const dex = _.findIndex(persons, function(o) { return o._id === selectedPerson; });
+    const person = persons[dex];
     if ( !searchValue || !selectedPerson ) { return false }
-    const { addArticles } = this.props.mainStore;
+    const { setValuesAfterSearch } = this.props.mainStore;
     const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false'), sort } });
-    addArticles(articles.articles, articles.typesSearched);
+
+    setValuesAfterSearch({ articles: articles.articles, typesSearched: articles.typesSearched, searchValue })
     this.setState({ initial: false, last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person, showAllForms: showAllForms }, loadingResult: false });
   }
   renderPersonsOptions = () => {
@@ -140,7 +163,6 @@ import { pluralizeType } from 'helpers/strings';
     const { last, loadingResult } = this.state;
     const { articles, typesSearched } = this.props.mainStore;
     function renderTypesSearched(typesSearched) {
-      console.log(typesSearched);
       return typesSearched.map((typeSearched, dex) => {
         if (dex === typesSearched.length) {
           return <Fragment><span>{ `${typeSearched.count} ${pluralizeType(typeSearched._id, typeSearched.count)}` }</span></Fragment>
