@@ -8,6 +8,7 @@ import { inject, observer } from 'mobx-react';
 import { FaArrowDown, FaRegFileExcel } from 'react-icons/fa';
 import { pluralizeType } from 'helpers/strings';
 import Cookies from 'universal-cookie';
+import getURLParams from 'helpers/urlParams';
 
 @inject('mainStore')
 @observer class Home extends Component {
@@ -56,38 +57,67 @@ import Cookies from 'universal-cookie';
   componentDidUpdate() {
     this.calculateSearchSize();
   }
+
+  toggleShowAllForms = () => {
+    const { current, initial } = this.state;
+    current.showAllForms = !!!JSON.parse(current.showAllForms);
+    const cookies = new Cookies();
+    cookies.set('showAllForms', JSON.parse(current.showAllForms));
+    this.setState({ current: current })
+    if (!initial) {
+      this.search()
+    }
+  }
+
+  setSearchPreferencesByCookiesOrBust() {
+    const cookies = new Cookies();
+    const cookiesObj = cookies.getAll();
+
+    const { current } = this.state;
+    var currentObjectToModify = current;
+    const keys = Object.keys(current);
+
+    for (let dex = 0; dex < keys.length; dex++) {
+      if (!(keys[dex] in cookiesObj) || ['persons', 'searchValue', 'selectedPerson'].includes(keys[dex])) {
+        continue;
+      }
+      currentObjectToModify[keys[dex]] = cookiesObj[keys[dex]];
+    }
+    this.setState({ current: currentObjectToModify })
+  }
+
   componentDidMount = async () => {
+    const urlParams = getURLParams();
+    console.log(urlParams);
     const { mainStore } = this.props;
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.calculateSearchSize);
     document.addEventListener('keydown', this.onEnterKey, false);
 
     const cookies = new Cookies();
+    const cookiesObj = cookies.getAll();
 
-    const personsCookie = cookies.get('persons');
+    this.setSearchPreferencesByCookiesOrBust();
 
     var persons;
 
-    if (personsCookie) {
-      persons = personsCookie;
+    if (cookiesObj.persons) {
+      this.setState({ loading: false, })
+      // console.log('persons cookie was found to be set as: ', cookiesObj.persons);
+      persons = cookiesObj.persons;
       mainStore.persons = persons;
-      this.setState({
-        loading: false,
-      })
       const personsFetchedAfter = await apiRequest({ endpoint: 'persons' });
       mainStore.persons = personsFetchedAfter;
       cookies.set('persons', personsFetchedAfter);
+      // console.log('fetched new persons to check for updated list: ', personsFetchedAfter);
     } else {
+      // console.log('existing persons cookie not found, fetching a brand new one')
       persons = await apiRequest({ endpoint: 'persons' });
+      // console.log('brand new persons found: ', persons);
       mainStore.persons = persons;
       cookies.set('persons', persons);
-      this.setState({
-        loading: false,
-      })
+      this.setState({ loading: false, })
     }
-
-
-
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -135,9 +165,7 @@ import Cookies from 'universal-cookie';
         <Fragment key={ article._id+i }>
           <Article
             articleData={ article }
-
             personData={ person }
-
             searchValue={ searchValue }
             showAllForms={ showAllForms }
           />
@@ -192,14 +220,7 @@ import Cookies from 'universal-cookie';
       }
     }
   }
-  toggleShowAllForms = () => {
-    const { current, initial } = this.state;
-    current.showAllForms = !!!current.showAllForms;
-    this.setState({ current: current })
-    if (!initial) {
-      this.search()
-    }
-  }
+
   cycleSort = () => {
     const { current } = this.state;
     if (current.sort === 'newest') {
@@ -207,6 +228,8 @@ import Cookies from 'universal-cookie';
     } else {
       current.sort = 'newest'
     }
+    const cookies = new Cookies();
+    cookies.set('sort', current.sort);
     this.setState({ current: current });
     this.search();
   }
@@ -246,7 +269,7 @@ import Cookies from 'universal-cookie';
             </div>
 
             <div className="navigationButtons">
-              <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ current.showAllForms }/><span className="pluralities">Search all forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
+              <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ JSON.parse(current.showAllForms) }/><span className="pluralities">Search all forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
               <span className={ initial ? 'd-none' : '' }>
               {current.sort === 'newest' && <div className="sortDropdown" onClick={ () => this.cycleSort() }>
                 <FaArrowDown />

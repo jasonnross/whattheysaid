@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Fragment } from 'react';
 
 export class Counter extends Component {
   renderCounters() {
@@ -35,7 +36,9 @@ export class Counter extends Component {
     }
 
     return returnArray.map((item, i) => {
-      return item;
+      return (
+        <Fragment key={i}>{item}</Fragment>
+      );
     });
   }
   render() {
