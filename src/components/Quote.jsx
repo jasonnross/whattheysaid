@@ -62,7 +62,7 @@ export class Quote extends Component {
   }
 
   render() {
-    const { contextLevel, lastHeight, contentHeightChanged } = this.state;
+    const { contextLevel } = this.state;
     const { searchValue, captureGroup, separatedSentenceElements, showAllForms, articleData } = this.props;
 
     const indexOfEarliestMention = captureGroup[0];
