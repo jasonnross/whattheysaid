@@ -6,6 +6,7 @@ import _ from 'lodash'
 import Loader from '../components/Loader';
 import { inject, observer } from 'mobx-react';
 import { FaArrowDown, FaRegFileExcel } from 'react-icons/fa';
+import { RiTwitterFill, RiBarChartHorizontalLine, RiForbid2Line } from "react-icons/ri";
 import { pluralizeType } from 'helpers/strings';
 import Cookies from 'universal-cookie';
 import getURLParams from 'helpers/urlParams';
@@ -22,6 +23,7 @@ import getURLParams from 'helpers/urlParams';
       person: {},
       showAllForms: true,
       sort: 'newest',
+      source: 'everything',
     },
     last: {
       searchValue: null,
@@ -49,7 +51,7 @@ import getURLParams from 'helpers/urlParams';
 
   calculateSearchSize = () => {
     const containerWidth = getComputedStyle(document.querySelector('.container')).width;
-    const searchWidth = parseInt(containerWidth) - 20;
+    const searchWidth = parseInt(containerWidth) - 40;
     if (document.getElementById('search')) {
       document.getElementById('search').style.width = `${searchWidth}px`;
     }
@@ -97,7 +99,7 @@ import getURLParams from 'helpers/urlParams';
     const cookies = new Cookies();
     const cookiesObj = cookies.getAll();
 
-    this.setSearchPreferencesByCookiesOrBust();
+    // this.setSearchPreferencesByCookiesOrBust();
 
     var persons;
 
@@ -133,13 +135,13 @@ import getURLParams from 'helpers/urlParams';
   search = async () => {
     this.setState({ loadingResult: true });
     // pull input values from state;
-    const { searchValue, selectedPerson, showAllForms, sort } = this.state.current;
+    const { searchValue, selectedPerson, showAllForms, sort, source } = this.state.current;
     const { persons } = this.props.mainStore;
     const dex = _.findIndex(persons, function(o) { return o._id === selectedPerson; });
     const person = persons[dex];
     if ( !searchValue || !selectedPerson ) { return false }
     const { setValuesAfterSearch } = this.props.mainStore;
-    const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false'), sort } });
+    const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false'), sort, source } });
 
     setValuesAfterSearch({ articles: articles.articles, typesSearched: articles.typesSearched, searchValue })
     this.setState({ initial: false, last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person, showAllForms: showAllForms }, loadingResult: false });
@@ -233,8 +235,20 @@ import getURLParams from 'helpers/urlParams';
     this.setState({ current: current });
     this.search();
   }
+  cycleSources = () => {
+    const { current } = this.state;
+    const sources = ['tweets', 'no_tweets', 'everything'];
+    const indexOfCurrent = sources.indexOf(current.source);
+    const nextSource = (indexOfCurrent + 1) === 3 ? 'tweets' : sources[indexOfCurrent + 1];
+    current.source = nextSource;
+    const cookies = new Cookies();
+    cookies.set('source', current.source);
+    this.setState({ current: current });
+    this.search();
+  }
   render() {
     const { loading, loadingResult, initial, scrolled, current, last } = this.state;
+    console.log(current.source);
     const handleFocus = (event) => event.target.select();
 
     function getSearchClassName(initial, scrolled) {
@@ -271,15 +285,39 @@ import getURLParams from 'helpers/urlParams';
             <div className="navigationButtons">
               <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ JSON.parse(current.showAllForms) }/><span className="pluralities">Search all forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
               <span className={ initial ? 'd-none' : '' }>
-              {current.sort === 'newest' && <div className="sortDropdown" onClick={ () => this.cycleSort() }>
+
+              {current.sort === 'newest' && <div className="searchModifierButton sortSelector" onClick={ () => this.cycleSort() }>
                 <FaArrowDown />
                 Newest
               </div>}
-              {current.sort === 'oldest' && <div className="sortDropdown" onClick={ () => this.cycleSort() }>
+              {current.sort === 'oldest' && <div className="searchModifierButton sortSelector" onClick={ () => this.cycleSort() }>
                 <FaArrowDown />
                 Oldest
               </div>
               }
+
+
+              {current.source === 'everything' &&
+                <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
+                  <RiBarChartHorizontalLine />
+                  Everything
+                </div>
+              }
+              {current.source === 'tweets' &&
+                <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
+                  <RiTwitterFill />
+                  Tweets
+                </div>
+              }
+              {current.source === 'no_tweets' &&
+                <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
+                  <RiForbid2Line />
+                  No Tweets
+                </div>
+              }
+
+
+
 
               </span>
 
