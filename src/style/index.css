@@ -226,9 +226,29 @@ h2.headerText {
 }
 
 .articleHeadContent {
-  padding: 5px 8px 5px 15px;
+  position: relative;
+  padding: 0 8px 5px 15px;
   float: left;
 }
+
+.articleLinks {
+  position: relative;
+  top: 3px;
+  color: var(--muted-text);
+}
+.articleLinks > a {
+  color: var(--muted-text);
+}
+.articleLinks > a:hover {
+  color: var(--primary-blue);
+}
+.articleLinks svg {
+  position: relative;
+  margin-left: 4px;
+  top: 1px;
+  height: 12px;
+}
+
 
 .articleHeadHeader {
   font-weight: bold;

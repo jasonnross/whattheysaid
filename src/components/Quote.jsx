@@ -57,7 +57,7 @@ export class Quote extends Component {
       // console.log('content did not resize the window')
       // this.setState({ contentHeightChanged: false })
     }
-    console.log(thisContentsHeight);
+    // console.log(thisContentsHeight);
 
   }
 

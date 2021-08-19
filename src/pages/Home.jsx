@@ -9,7 +9,7 @@ import { FaArrowDown, FaRegFileExcel } from 'react-icons/fa';
 import { RiTwitterFill, RiBarChartHorizontalLine, RiForbid2Line } from "react-icons/ri";
 import { pluralizeType } from 'helpers/strings';
 import Cookies from 'universal-cookie';
-import getURLParams from 'helpers/urlParams';
+// import getURLParams from 'helpers/urlParams';
 
 @inject('mainStore')
 @observer class Home extends Component {
@@ -89,8 +89,8 @@ import getURLParams from 'helpers/urlParams';
   }
 
   componentDidMount = async () => {
-    const urlParams = getURLParams();
-    console.log(urlParams);
+    // const urlParams = getURLParams();
+    // console.log(urlParams);
     const { mainStore } = this.props;
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.calculateSearchSize);
@@ -142,7 +142,7 @@ import getURLParams from 'helpers/urlParams';
     if ( !searchValue || !selectedPerson ) { return false }
     const { setValuesAfterSearch } = this.props.mainStore;
     const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false'), sort, source } });
-
+    console.log(articles);
     setValuesAfterSearch({ articles: articles.articles, typesSearched: articles.typesSearched, searchValue })
     this.setState({ initial: false, last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person, showAllForms: showAllForms }, loadingResult: false });
   }
@@ -248,7 +248,6 @@ import getURLParams from 'helpers/urlParams';
   }
   render() {
     const { loading, loadingResult, initial, scrolled, current, last } = this.state;
-    console.log(current.source);
     const handleFocus = (event) => event.target.select();
 
     function getSearchClassName(initial, scrolled) {

@@ -3,7 +3,7 @@ import { suffixes } from '../helpers/forms'
 import Quote from './Quote'
 // import TwitterLogo from '../assets/twitter.png'
 import { Fragment } from 'react'
-import { FaTwitter, FaMicrophone, FaNewspaper, FaHandshake } from 'react-icons/fa';
+import { FaTwitter, FaMicrophone, FaNewspaper, FaHandshake, FaLink } from 'react-icons/fa';
 const { DateTime } = require("luxon")
 
 export class Article extends Component {
@@ -104,6 +104,14 @@ export class Article extends Component {
     const formattedDate = DateTime.fromISO(date).toFormat('DDD');
     const Symbol = methods[method].symbol;
 
+    console.log(this.props);
+
+    function renderArticleSource() {
+      if (articleData.type === 'tweet') {
+        return <a href={ `https://twitter.com/${ personData.handles.twitter }/status/${ articleData.resource_id }` } target="_blank" rel="noopener noreferrer">Source<FaLink /></a>;
+      }
+    }
+
     return (
       <div className="articleWrapper" key={ articleId }>
         <div className="articleHead">
@@ -111,6 +119,9 @@ export class Article extends Component {
           <div className="articleHeadContent">
             <span className="articleHeadHeader">{ methods[method].name }</span>
             <span className="articleHeadTag">{ methods[method].foreword } { name } on { formattedDate } { methods[method]?.postword ?? '' }</span>
+            <div className="articleLinks">
+              { renderArticleSource() }
+            </div>
           </div>
         </div>
         { this.renderQuotes() }
