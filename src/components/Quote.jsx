@@ -33,15 +33,9 @@ export class Quote extends Component {
 
   checkSizeOnChange() {
     const { captureGroup, articleData } = this.props;
-
     const thisContentsId = `${articleData._id}-${captureGroup}`;
-
     const thisContentsHeight = document.getElementById(thisContentsId).clientHeight;
-
     this.setState({ explicitHeight: thisContentsHeight })
-
-    console.log(thisContentsHeight);
-
   }
 
   componentDidUpdate() {

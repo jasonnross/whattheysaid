@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 import { inject, observer } from 'mobx-react';
 import { FaArrowDown, FaRegFileExcel } from 'react-icons/fa';
 import { RiTwitterFill, RiBarChartHorizontalLine, RiForbid2Line } from "react-icons/ri";
-import { pluralizeType } from 'helpers/strings';
+import { parseStringToQuotes, pluralizeType } from 'helpers/strings';
 import Cookies from 'universal-cookie';
 // import getURLParams from 'helpers/urlParams';
 
@@ -51,7 +51,7 @@ import Cookies from 'universal-cookie';
 
   calculateSearchSize = () => {
     const containerWidth = getComputedStyle(document.querySelector('.container')).width;
-    const searchWidth = parseInt(containerWidth) - 40;
+    const searchWidth = parseInt(containerWidth) - 30;
     if (document.getElementById('search')) {
       document.getElementById('search').style.width = `${searchWidth}px`;
     }
@@ -89,6 +89,7 @@ import Cookies from 'universal-cookie';
   }
 
   componentDidMount = async () => {
+    parseStringToQuotes();
     // const urlParams = getURLParams();
     // console.log(urlParams);
     const { mainStore } = this.props;
@@ -138,12 +139,16 @@ import Cookies from 'universal-cookie';
     const { searchValue, selectedPerson, showAllForms, sort, source } = this.state.current;
     const { persons } = this.props.mainStore;
     const dex = _.findIndex(persons, function(o) { return o._id === selectedPerson; });
-    const person = persons[dex];
+    const person = persons[dex]; // get the selected person
     if ( !searchValue || !selectedPerson ) { return false }
     const { setValuesAfterSearch } = this.props.mainStore;
     const articles = await apiRequest({ endpoint: 'articles/articlesByPhrase', parameters: { person_id: selectedPerson, phrase: searchValue, all_forms: (showAllForms ? 'true' : 'false'), sort, source } });
+
     console.log(articles);
+
     setValuesAfterSearch({ articles: articles.articles, typesSearched: articles.typesSearched, searchValue })
+    console.log(person)
+    document.title = `What ${person.first_name} ${person.last_name} said about ${searchValue}`;
     this.setState({ initial: false, last: { searchValue: searchValue, selectedPerson: selectedPerson, person: person, showAllForms: showAllForms }, loadingResult: false });
   }
   renderPersonsOptions = () => {
@@ -151,12 +156,12 @@ import Cookies from 'universal-cookie';
     if (persons) {
       return persons.map(person => {
         return {
-          key: person._id, value: person._id, text: `${person.first_name} ${person.last_name}`
+          key: person.id, value: person.id, text: `${person.first_name} ${person.last_name}`
         }
       })
     }
   }
-  renderQuotes = () => {
+  renderArticles = () => {
     const { selectedPerson, searchValue, showAllForms } = this.state.last;
     const { persons, articles } = this.props.mainStore
     if (!( selectedPerson && persons )) { return false; }
@@ -260,79 +265,74 @@ import Cookies from 'universal-cookie';
     } else {
       return (
         <div>
-          <div className={ getSearchClassName(initial, scrolled) } id="search">
-            <div className="searchBar">
-              What did
-              &nbsp;&nbsp;
-              <Dropdown
-                className="personsSelect"
-                search
-                selection
-                placeholder='this person'
-                onChange={this.onPersonChange}
-                options={ this.renderPersonsOptions()}
-                openOnFocus
-                searchInput={{ autoFocus: true }}
-              />
-              &nbsp;&nbsp;
-              say about
-              &nbsp;&nbsp;
-              <Input className="topicInput" transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }  onFocus={handleFocus} />
-              { (!current.selectedPerson || !current.searchValue || ( current.searchValue === last.searchValue && current.selectedPerson === last.selectedPerson && current.showAllForms === last.showAllForms )) ? <Button primary disabled>?</Button> : <Button onClick={ this.search } primary>?</Button> }
-            </div>
+        <div className={ getSearchClassName(initial, scrolled) } id="search">
+        <div className="searchBar">
+          What did
+          &nbsp;&nbsp;
+          <Dropdown
+            className="personsSelect"
+            search
+            selection
+            placeholder='this person'
+            onChange={this.onPersonChange}
+            options={ this.renderPersonsOptions()}
+            openOnFocus
+            searchInput={{ autoFocus: true }}
+          />
+          &nbsp;&nbsp;
+          say about
+          &nbsp;&nbsp;
+          <Input className="topicInput" transparent placeholder='this topic' onChange={ (e) => this.onSearchChange(e) }  onFocus={handleFocus} />
+          { (!current.selectedPerson || !current.searchValue || ( current.searchValue === last.searchValue && current.selectedPerson === last.selectedPerson && current.showAllForms === last.showAllForms )) ? <Button primary disabled>?</Button> : <Button onClick={ this.search } primary>?</Button> }
+        </div>
 
-            <div className="navigationButtons">
-              <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ JSON.parse(current.showAllForms) }/><span className="pluralities">Search all forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
-              <span className={ initial ? 'd-none' : '' }>
+        <div className="navigationButtons">
+          <Radio toggle onChange={ (e) => this.toggleShowAllForms(e) } checked={ JSON.parse(current.showAllForms) }/><span className="pluralities">Search all forms of { ( last.searchValue || current.searchValue ) ? '"'+( last.searchValue || current.searchValue )+'"' : "this topic" }</span>
+          <span>
 
-              {current.sort === 'newest' && <div className="searchModifierButton sortSelector" onClick={ () => this.cycleSort() }>
-                <FaArrowDown />
-                Newest
-              </div>}
-              {current.sort === 'oldest' && <div className="searchModifierButton sortSelector" onClick={ () => this.cycleSort() }>
-                <FaArrowDown />
-                Oldest
-              </div>
-              }
-
-
-              {current.source === 'everything' &&
-                <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
-                  <RiBarChartHorizontalLine />
-                  Everything
-                </div>
-              }
-              {current.source === 'tweets' &&
-                <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
-                  <RiTwitterFill />
-                  Tweets
-                </div>
-              }
-              {current.source === 'no_tweets' &&
-                <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
-                  <RiForbid2Line />
-                  No Tweets
-                </div>
-              }
-
-
-
-
-              </span>
-
-            </div>
+          {current.sort === 'newest' && <div className="searchModifierButton sortSelector" onClick={ () => this.cycleSort() }>
+            <FaArrowDown />
+            Newest
+          </div>}
+          {current.sort === 'oldest' && <div className="searchModifierButton sortSelector" onClick={ () => this.cycleSort() }>
+            <FaArrowDown />
+            Oldest
           </div>
+          }
+
+          {current.source === 'everything' &&
+            <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
+              <RiBarChartHorizontalLine />
+              Everything
+            </div>
+          }
+          {current.source === 'tweets' &&
+            <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
+              <RiTwitterFill />
+              Tweets
+            </div>
+          }
+          {current.source === 'no_tweets' &&
+            <div className="searchModifierButton sourceSelector" onClick={ () => this.cycleSources() }>
+              <RiForbid2Line />
+              No Tweets
+            </div>
+          }
+          </span>
+
+        </div>
+      </div>
 
           <div className="moveDown">
           { !initial &&
           <Fragment>
-          <Divider />
+          <Divider className="searchDivider"/>
           </Fragment>
           }
             { this.renderResultDescription() }
           <br></br>
           <br></br>
-            { !loadingResult && this.renderQuotes() }
+            { !loadingResult && this.renderArticles() }
           </div>
         </div>
       )

@@ -3,10 +3,10 @@ html {
 }
 
 :root {
-  --primary-blue: #2AA0F9;
-  --primary-grey: #2a2f35;
-  --secondary-grey: #2f343a;
-  --standard-text: #EFF0F4;
+  --primary-blue: #2185d0;
+  --primary-grey: #22262b;
+  --secondary-grey: #272b30;
+  --standard-text: #f5f5f5;
   --hovered-text: #eff0f4c4;
   --disabled-text: #636363;
   --muted-text: #6a6a6a;
@@ -54,17 +54,15 @@ h4 {
 
 .headerText {
   letter-spacing: 3px;
-  padding: 15px 15px 11px 15px !important;
-}
-
-h2.headerText {
+  padding: 10px 15px 7px 15px !important;
   font-weight: 900 !important;
   color: var(--primary-blue) !important;
 }
 
+
 .container {
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px;
   position: relative;
   top: 68px;
   max-width: 1500px;
@@ -192,7 +190,6 @@ h2.headerText {
   position: relative;
   margin-right: 4px;
   top: 2px;
-  /* transform: scale(1.5); */
 }
 
 .sourceSelector > svg {
@@ -205,11 +202,11 @@ h2.headerText {
 .result {
   border-radius: 10px;
   padding: 10px;
-  margin-bottom: 17px;
+  margin-bottom: 10px;
   background-color: var(--primary-grey);
   border: 1px solid var(--secondary-grey);
   cursor: pointer;
-  transition: background-color 0.15s;
+  transition: background-color 0.05s;
 }
 
 .result:hover {
@@ -217,17 +214,18 @@ h2.headerText {
 }
 
 .articleWrapper {
-  margin-top: 30px !important;
+  margin-top: 10px;
+  margin-bottom: 24px !important;
 }
 
 .articleHead {
   height: 50px;
-  margin-bottom: 17px;
+  margin-bottom: 10px;
 }
 
 .articleHeadContent {
   position: relative;
-  padding: 0 8px 5px 15px;
+  padding: 0 0px 5px 11px;
   float: left;
 }
 
@@ -244,7 +242,7 @@ h2.headerText {
 }
 .articleLinks svg {
   position: relative;
-  margin-left: 4px;
+  margin-right: 2px;
   top: 1px;
   height: 12px;
 }
@@ -264,7 +262,7 @@ h2.headerText {
   border-radius: 10px;
   margin-bottom: 10px;
   text-align: center;
-  padding: 10px 0 10px 0;
+  padding: 7px 0 7px 0;
 }
 .searchBar Button {
   border-radius: 10px !important;
@@ -298,12 +296,12 @@ h2.headerText {
 .searchAfter {
   margin: 0;
   z-index: 1000;
-  padding-top: 30px;
-  padding-bottom: 15px;
+  padding-top: 5px;
+  padding-bottom: 0px;
 }
 .searchAfterScrolled {
   position: fixed;
-  top: 45px;
+  top: 41px;
   padding-left: 15px;
   padding-right: 15px;
   border-radius: 0 0 10px 10px;
@@ -322,6 +320,10 @@ h2.headerText {
   transition: border-width 0.15s, padding 0.05s, background-color 0.15s;
 }
 
+.searchDivider {
+  padding: 0;
+  margin-top: 0 !important;
+}
 .quoteWithinArticleContainer {
   position: absolute;
   width: 100%;
@@ -364,11 +366,13 @@ h2.headerText {
 
 .moveDown {
   position: relative;
-  top: 100px;
+  top: 68px;
 }
 
 .navigationButtons {
-  margin-top: 15px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  padding-bottom: 0;
 }
 
 .navigationButtons .checkbox label::before, label::after {
@@ -566,4 +570,8 @@ h2.headerText {
 
 .noResults .sourcesSearched {
   line-height: 1.9rem;
+}
+
+.reportAProblem:hover {
+  color: #d40404 !important;
 }

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { suffixes } from '../helpers/forms'
 import Quote from './Quote'
-// import TwitterLogo from '../assets/twitter.png'
 import { Fragment } from 'react'
-import { FaTwitter, FaMicrophone, FaNewspaper, FaHandshake, FaLink } from 'react-icons/fa';
+import { FaTwitter, FaMicrophone, FaNewspaper, FaHandshake } from 'react-icons/fa';
 const { DateTime } = require("luxon")
 
 export class Article extends Component {
@@ -18,7 +17,14 @@ export class Article extends Component {
     }
 
     const regExp = new RegExp(regExpString, "i");
-    var separatedSentenceElements = articleData.content.split(/(?<=[.!?])/);
+    const articleContent = articleData?.content;
+    const articleContentArray = articleData?.content_array;
+
+    if (articleContentArray.length > 0) {
+      console.log('yay');
+    }
+
+    const separatedSentenceElements = articleContent.split(/(?<=[.!?])/);
 
     // create array of indexes of sentences matching the search term
     var indexesOfMatchingSentences = [];
@@ -45,7 +51,7 @@ export class Article extends Component {
     })
 
 
-    // for each capture group, render something
+    // for each capture group, render a quote
     return captureGroups.map((captureGroup, i) => {
       return (
         <Fragment key = { `${articleData._id}${i}` }>
@@ -104,12 +110,22 @@ export class Article extends Component {
     const formattedDate = DateTime.fromISO(date).toFormat('DDD');
     const Symbol = methods[method].symbol;
 
-    console.log(this.props);
-
-    function renderArticleSource() {
+    function renderArticleButtons() {
+      let articleButtons = [];
       if (articleData.type === 'tweet') {
-        return <a href={ `https://twitter.com/${ personData.handles.twitter }/status/${ articleData.resource_id }` } target="_blank" rel="noopener noreferrer">Source<FaLink /></a>;
+        articleButtons.push(<a href={ `https://twitter.com/${ personData.handles.twitter }/status/${ articleData.resource_id }` } target="_blank" rel="noopener noreferrer">Source</a>)
       }
+      articleButtons.push(<a className="reportAProblem" href={ `https://twitter.com/${ personData.handles.twitter }/status/${ articleData.resource_id }` } target="_blank" rel="noopener noreferrer">Report a problem</a>)
+      const spacing = <Fragment>&nbsp;&#xB7;&nbsp;&nbsp;</Fragment>
+      return articleButtons.map((item, i) => {
+        if (i !== articleButtons.length - 1) {
+          return (
+            <Fragment key={ i }>{ item } { spacing }</Fragment>
+          )
+        } else {
+          return item
+        }
+      })
     }
 
     return (
@@ -120,7 +136,7 @@ export class Article extends Component {
             <span className="articleHeadHeader">{ methods[method].name }</span>
             <span className="articleHeadTag">{ methods[method].foreword } { name } on { formattedDate } { methods[method]?.postword ?? '' }</span>
             <div className="articleLinks">
-              { renderArticleSource() }
+              { renderArticleButtons() }
             </div>
           </div>
         </div>
